@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block titleblock %}
+Register
+{% endblock %}
+
+{% block content %}
+
+{% load addclass %}
+<style>
+	form {
+		display: grid;
+		grid-template-columns: auto minmax(12em, auto, 2em);
+		width: max-content;
+		grid-gap: 0.3em;
+		margin: auto;
+	}
+	form label {
+		grid-column: 1;
+		text-align: right;
+		margin: 0.5em;
+	}
+	form select, form input {
+		padding: 0 1em;
+		min-height: 2em;
+		grid-column: 2;
+		border-radius: 0.5em;
+		border: 2px solid var(--line-color);
+		background-color: var(--field-bg);
+		color: var(--text-color);
+	}
+	form small {
+		align-self: center;
+		color: var(--heading-color);
+	}
+	.submit {
+		grid-column: 1/4 !important;
+	}
+</style>
+<div class="content">
+	<h1>Create An Account</h1>
+	<hr />
+	{% if user.is_authenticated %}
+		<div class="alert-info" role="alert">You are already registered!</div>
+	{% else %}
+		{% if form.errors %}
+			{% for field in form %}
+				{% for error in field.errors %}
+					<div class="alert-danger" role="alert">{{ error }}</div>
+				{% endfor %}
+			{% endfor %}
+		{% endif %}
+	{% endif %}
+
+	{% if not user.is_authenticated %}
+    <h3>{{game_name}} is in EARLY Development!</h3>
+    <p>This means it is <strong>incomplete</strong> and <strong>probably full of bugs</strong>.</p>
+      {% if register_enabled %}
+			<p>Any accounts, characters, or other objects created are <strong>temporary</strong> and <strong>will be erased</strong> before official launch.</p>
+			<form method="post" action="?">
+          {% csrf_token %}
+
+          {% for field in form %}
+              {{ field.label_tag }}
+              {{ field | addclass:"form-control" }}
+              {% if field.help_text %}
+              <!-- <small class="form-text text-muted">{{ field.help_text|safe }}</small> -->
+              {% endif %}
+          {% endfor %}
+          <input class="submit" type="submit" value="Register" />
+          <input type="hidden" name="next" value="{{ next }}" />
+      </form>
+      {% else %}
+      <p>Registration is currently disabled.</p>
+      {% endif %}
+	{% endif %}
+</div>
+{% endblock %}

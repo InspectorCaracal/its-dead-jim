@@ -1,0 +1,32 @@
+[project]
+name = "NEXUS"
+version = "0.0.7"
+requires-python = ">=3.10"
+dependencies = [
+    # General
+    "evennia >= 4.0, < 5.0",
+    "networkx >= 3.0",
+    'pywin32; sys_platform=="win32"',
+    'toml',
+    "django-tinymce4-lite @ git+https://github.com/InspectorCaracal/django-tinymce4-lite.git@django4",
+    "django-widget-tweaks",
+    "django-gravatar2 @ git+https://github.com/InspectorCaracal/django-gravatar",
+    "humanize",
+    "wiki",
+
+    # contrib requirements
+    "gitpython",
+]
+
+[project.optional-dependencies]
+prod = [
+    'mysqlclient',
+    'pyopenssl',
+    'service_identity',
+]
+
+[tool.setuptools]
+py-modules = []
+
+# [project.urls]
+# repository = "https://github.com/<your repo>"

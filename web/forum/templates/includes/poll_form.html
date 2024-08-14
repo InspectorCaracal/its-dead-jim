@@ -1,0 +1,79 @@
+<input type="button" id="pollbutton" onclick="togglePoll()" class="forum-button-link" value="Add Poll">
+
+<div id="pollbox" class="hidden">
+  <p>
+    <label for="poll_question">Poll Question:</label>
+    <input name="poll_question" id="poll_question" type="text" maxlength="300">
+  </p>
+
+  <input id="number_options" name="number_options" type="text" style="display:none;" value="2">
+  <input id="poll_enabled" name="poll_enabled" type="text"  style="display:none;" value="no">
+
+  <p>
+    <label for="poll_type">Poll Type:</label>
+    <select name="poll_type" id="poll_type">
+      <option>single-choice</option>
+      <option>checkboxes</option>
+    </select>
+  </p>
+  <div id="poll_options">
+    <p>
+      <label for="option_1_text">Option 1:</label>
+      <input name="option_1_text" class="poll_option" maxlength="70" id="option_1_text" type="text">
+    </p>
+    <p>
+      <label for="option_2_text">Option 2:</label>
+      <input name="option_2_text"  class="poll_option" maxlength="70" id="option_2_text" type="text">
+    </p>
+  </div>
+  <input type="button" id="add_poll_option" class="forum-button-link" onclick="addPollOption()" value="Add Option">
+
+</div>
+<script>
+  const max_poll_options = 7;
+  var total_poll_options = 2;
+
+  function togglePoll() {
+    const toggle_button = document.getElementById("pollbutton");
+    if (toggle_button.value == 'Add Poll') {
+      document.getElementById("pollbox").classList.remove('hidden');
+      toggle_button.value = 'Remove Poll';
+      document.getElementById("poll_enabled").value = "yes";
+    }
+    else {
+      document.getElementById("pollbox").classList.add('hidden');
+        toggle_button.value = 'Add Poll';
+        document.getElementById("poll_enabled").value = "no";
+    }
+  }
+  
+  function addPollOption() {
+    if (total_poll_options >= max_poll_options) return;
+    const option_list = document.getElementById('poll_options');
+
+    const i = total_poll_options + 1;
+    const option_name = 'option_'+i+'_text';
+
+    el = document.createElement('p');
+
+    label = document.createElement('label');
+    label.innerText = 'Option '+i; label.for = option_name;
+    el.appendChild(label);
+
+    input = document.createElement('input');
+    input.name = option_name; input.id = option_name;
+    input.maxlength = 70; input.type = 'text';
+    input.classList.add("poll_option")
+    el.appendChild(input);
+
+    option_list.appendChild(el);
+
+    total_poll_options = i;
+
+    if (total_poll_options >= max_poll_options) {
+      document.getElementById('add_poll_option').classList.add('hidden');
+    }
+
+  }
+  
+</script>

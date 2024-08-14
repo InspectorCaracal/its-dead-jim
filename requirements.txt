@@ -1,0 +1,12 @@
+#my requirements
+evennia>=2.1
+networkx>=3.0
+phx-class-registry>=2.1.2
+pywin32; sys_platform=="win32"
+
+# using linux platform as indicator of being on the prod server
+mysqlclient; sys_platform=="linux"
+pyopenssl; sys_platform=="linux"
+
+# contrib requirements
+gitpython

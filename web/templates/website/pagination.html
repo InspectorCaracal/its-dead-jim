@@ -1,0 +1,26 @@
+{% if page_obj and page_obj.paginator.page_range|length > 1 %}
+<div class="content">
+	<a class="next_page" href="{% if page_obj.has_next %}?{% if q %}q={{ q }}&{% endif %}page={{ page_obj.next_page_number }}{% endif %}" aria-label="Next">
+		<span class="sr-only">Next</span>
+		<span aria-hidden="true">&raquo;</span>
+	</a>
+
+	<a class="prev_page" href="{% if page_obj.has_previous %}?{% if q %}q={{ q }}&{% endif %}page={{ page_obj.previous_page_number }}{% endif %}" aria-label="Previous">
+		<span aria-hidden="true">&laquo;</span>
+		<span class="sr-only">Previous</span>
+	</a>
+
+	<ul class="page-list">
+	{% for l in page_obj.paginator.page_range %}
+		{% if l <= page_obj.number|add:5 and l >= page_obj.number|add:-5 %}
+		{% if forloop.counter == page_obj.number %}
+		<li class="page-item active">{{ forloop.counter }}</li>
+		{% else %}
+		<li class="page-item"><a class="page-link" href="?{% if q %}q={{ q }}&{% endif %}page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+		{% endif %}
+		{% endif %}
+	{% endfor %}
+	</ul>
+	
+</div>
+{% endif %}

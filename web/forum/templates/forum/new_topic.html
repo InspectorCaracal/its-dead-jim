@@ -1,0 +1,26 @@
+{% extends "forum_base.html" %}
+
+{% load static %}
+
+{% block breadcrumbs %}
+<nav class="forum-navigator" aria-label="forum"><a href="{% url 'forum_index' %}" class="forum-light-link"> {{ game_name }} Forum</a>
+  > <a href="{% url 'board' board.slug %}" class="forum-light-link">{{ board.name }}</a>
+  > Posting a New Topic</nav>
+{% endblock %}
+
+{% block content %}
+
+<div class="content">
+  <form method="post" novalidate class="forum-post-form">
+
+    {% csrf_token %}
+    {% include 'includes/forum_form.html' %}
+    {% include 'includes/poll_form.html' %}
+    <div class="submit">
+      <button type="submit" class="submit">Post</button>
+    </div>
+  </form>
+</div>
+
+
+{% endblock %}

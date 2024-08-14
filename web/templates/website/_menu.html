@@ -1,0 +1,39 @@
+<nav id="navbar">
+{% block navbar_left %}
+
+	<a href="{% url 'index' %}">Home</a>
+	<a href="{% url 'about' %}">About</a>
+	<!-- game views -->
+	{% if account %}
+		<a href="{% url 'characters' %}">Characters</a>
+		<!--<a href="{% url 'channels' %}">Channels</a> -->
+		<!--<a href="{% url 'help' %}">Support</a> -->
+		<!-- end game views -->
+
+		{% if webclient_enabled %}
+			<a href="{% url 'webclient:index' %}">Play Online</a>
+		{% endif %}
+
+		{% if user.is_staff %}
+			<a href="{% url 'admin:index' %}">Admin</a>
+			{% if rest_api_enabled %}
+				<a href="/api">API</a>
+			{% endif %}
+		{% endif %}
+	{% endif %}
+	<a href="{% url 'forum_index' %}">Forum</a>
+{% endblock %}
+
+{% block navbar_user %}
+	{% if account %}
+		<span class="account_name">Logged in as {{ account.username }}</span>
+<!--			<a class="dropdown-item" href="{% url 'password_change' %}">Change Password</a> -->
+		<a href="{% url 'logout' %}">Log Out</a>
+	{% else %}
+		<a href="{% url 'login' %}?next={{ request.path }}">Log In</a>
+		{% if register_enabled %}
+			<a href="{% url 'register' %}">Register</a>
+		{% endif %}
+	{% endif %}
+{% endblock %}
+</nav>

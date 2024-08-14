@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+{% if not user.is_authenticated %}
+<meta http-equiv="Refresh" content="0; url='{% url 'login' %}'" />
+{% else %}
+{% load static %}
+<html dir="ltr" lang="en">
+  <head>
+    <title> {{game_name}} </title>
+    <meta http-equiv="content-type", content="application/xhtml+xml; charset=UTF-8" />
+    <meta name="author" content="Evennia" />
+    <link rel="icon" type="image/x-icon" href="{% static "website/images/logo.png" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "webclient/css/webclient.css" %}?{{client_css_version}}">
+
+    <script language="javascript" type="text/javascript">
+        {% if websocket_enabled %}
+            var wsactive = true;
+        {% else %}
+            var wsactive = false;
+        {% endif %}
+
+        {% if browser_sessid %}
+           var csessid = "{{browser_sessid}}";
+        {% else %}
+           var csessid = false;
+        {% endif %}
+
+				{% if websocket_url %}
+					var wsurl = "{{websocket_url}}";
+				{% else %}
+					var wsurl = "ws://" + this.location.hostname + ":{{websocket_port}}";
+				{% endif %}
+    </script>
+  </head>
+  <body>
+    {% include "website/_menu.html" %}
+		<div id="main">
+			<div id="page">
+				<h3>Location</h3>
+				<div id="area" aria-atomic="false" aria-live="true"></div>
+				<div id="travel"></div>
+				<h3>Activity</h3>
+				<div id="area_log" class="log" role="log" aria-label="activity"></div>
+			</div>
+			<div id="interface">
+				<h3>Inspect</h3>
+				<div id="look" aria-live="polite" aria-atomic="true"></div>
+				<h3>Command Log</h3>
+				<div id="action_log" class="log" role="log" aria-label="command log"></div>
+			</div>
+			<p id="prompt" aria-live="polite" aria-atomic="true" role="status" aria-label="status"></p>
+		<div id="toggles">
+		<!-- temporarily turning off since light mode isn't set up
+			<label title="Toggle between Dark and Light mode" class="switch">
+				<input id="theme_toggle" type="checkbox" onclick="javascript:toggleTheme(this);">
+				<span class="slider"></span>
+				<span>Dark Mode</font>
+			</label>
+		-->
+			<span id="popup_buttons"><span id="channel_toggle" class="clickable" onclick="javascript:PopChannels();">open channels</span></span>
+		</div>
+			<form id="input_form" method="post">
+				<textarea id="input_box" class="input_box" name="input_box" placeholder="" maxlength="500"></textarea>
+			</form>
+		</div>
+		<script src="{% static "webclient/js/webclient.js" %}?{{client_js_version}}" language="javascript" type="text/javascript" charset="utf-8"/></script>
+	</body>
+{% endif %}
+</html>

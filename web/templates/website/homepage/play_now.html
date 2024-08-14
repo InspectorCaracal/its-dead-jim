@@ -1,0 +1,9 @@
+{% if account and webclient_enabled %}
+	<a href="{% url 'webclient:index' %}" class="playbutton">Play in the browser!</a>
+{% elif register_enabled %}
+	<a href="{% url 'register' %}" class="playbutton">Create an Account</a>
+{% else %}
+	<p class="center"><strong>Registration is currently closed.</strong></p>
+{% endif %}
+<p>There's currently <strong>{% if num_accounts_connected %}{{num_accounts_connected}}{% else %}no{% endif %}</strong> player{{num_accounts_connected|pluralize}} connected.</p>
+<p><span style="font-size:0.8em">In the past week, <strong>{% if num_accounts_registered_recent %}{{num_accounts_registered_recent}}{% else %}no{% endif %}</strong> new player{{num_accounts_registered_recent|pluralize}} joined and <strong>{% if num_accounts_connected_recent %}{{num_accounts_connected_recent}}{% else %}no{% endif %}</strong> player{{num_accounts_connected_recent|pluralize}} visited the city.</span></p>

@@ -1,0 +1,25 @@
+{% extends "website/base.html" %}
+
+
+{% block header_ext %}
+<META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
+{% endblock %}
+
+{% block titleblock %}Logged Out{% endblock %}
+
+{% block body %}
+{% include "website/_header.html" %}
+
+{% load addclass %}
+<div class="content">
+	<h1>Logged Out</h1>
+	<h4>You have been logged out.</h4>
+	<p>Redirecting in 2 seconds ...</p>
+</div>
+
+<script type="text/JavaScript">
+setTimeout("location.href = '/';",2000);
+</script>
+
+{% endblock %}
+

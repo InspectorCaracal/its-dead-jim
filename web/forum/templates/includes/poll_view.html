@@ -1,0 +1,48 @@
+{% with poll=post.get_poll %}
+{% if poll %}
+<div class="forum-poll">
+	<h3>{{poll.name}}</h3>
+	{% if form %}
+	{{ form.media }}
+	<form method="post" action="{% url 'do_vote' poll.pk %}" novalidate>
+	{% csrf_token %}
+	{% load widget_tweaks %}
+	{% for field in form %}
+		{% if form.is_bound %}
+			{% if field.errors %}
+				{% render_field field class="form-control is-invalid" %}
+				{% for error in field.errors %}
+					<div class="invalid-feedback">
+						{{ error }}
+					</div>
+				{% endfor %}
+			{% else %}
+				{% render_field field class="form-control is-valid" %}
+			{% endif %}
+		{% else %}
+			{% render_field field class="form-control" %}
+		{% endif %}
+	
+		{% if field.help_text %}
+			<small class="form-text text-muted">
+				{{ field.help_text }}
+			</small>
+		{% endif %}
+	{% endfor %}
+	<div class="submit">
+		<button type="submit" class="submit">Vote</button>
+	</div>
+</form>
+{% else %}
+<table>
+	{% for option in poll.list_options %}
+		<tr>
+			<td class='poll-option'>{{option.description}}</td>
+			<td class='poll-percentage'>{{option.percentage}}</td>
+		</tr>
+	{% endfor %}
+</table>
+{% endif %}
+</div>
+{% endif %}
+{% endwith %}

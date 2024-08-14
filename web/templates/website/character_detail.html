@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block titleblock %}
+{{ object }}
+{% endblock %}
+
+{% block content %}
+
+{% load addclass %}
+<div class="content">
+	<h1 class="card-title">{{ object }}</h1>
+	<p>Created on {{ object.db_date_created }}</p>
+	<hr />
+	<h4>Description</h4>
+	{% for piece in object.web_desc %}
+		<p>{{ piece }}</p>
+	{% endfor %}
+
+	<h4>Skills</h4>
+	<ul>
+	{% for skill, level in skill_list.items %}
+		{% if "subskills" in skill %}
+			<ul>
+			{% for subskill, sublevel in level.items %}
+				<li><span class="subskill-name">{{ subskill }}</span> <span class="subskill-level">{{ sublevel }}</a></li>
+			{% endfor %}
+			</ul>
+		{% else %}
+			<li><span class="skill-name">{{ skill }}</span> <span class="skill-level">{{ level }}</a></li>
+		{% endif %}
+	{% endfor %}
+	</ul>
+	</div>
+	<!-- end right/content column -->
+
+</div>
+{% endblock %}

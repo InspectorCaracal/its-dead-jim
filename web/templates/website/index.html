@@ -1,0 +1,19 @@
+{% extends "website/base.html" %}
+
+{% block titleblock %}Home{% endblock %}
+
+{% block header_ext %}
+{% endblock %}
+
+{% block content %}
+<div class="content">
+{% include "website/homepage/blurb.html" %}
+{% include "website/homepage/play_now.html" %}
+<hr />
+{% include "website/homepage/info.html" %}
+</div>
+
+<div class="content">
+{% include "website/homepage/events.html" %}
+</div>
+{% endblock %}

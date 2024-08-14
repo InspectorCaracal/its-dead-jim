@@ -1,0 +1,29 @@
+{% for post in topic.get_last_five_posts %}
+<div id="{{ post.pk }}" class="content">
+  <div class="post-content">
+    <span class="post-date">{{ post.created_at }}</span>
+    <span class="post-header">
+    <!-- TODO: make this a link to the post, not just topic -->
+    <a href="{% url 'topic_posts' post.topic.board.slug post.topic.pk  %}?page={{post.topic.get_page_count}}">
+    {% if post.subject %}
+      {{ post.subject }}
+    {% else %}
+      Re: {{ post.topic.subject }}
+    {% endif %}
+    </a></span>
+    {% if user == post.created_by %}
+     <div class="you">
+    {% else %}
+      <div class="username">
+    {% endif %}
+    by {{ post.created_by.username }}</div>
+    {% if post.created_by == user %}
+      <div class="post-mine" >
+    {% else %}
+      <div class="post-yours">
+    {% endif %}
+    {{ post.content | safe }}
+    </div>
+  </div>
+</div>
+{% endfor %}

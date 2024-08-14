@@ -1,0 +1,52 @@
+{% extends "forum_base.html" %}
+{% load humanize %}
+{% block content %}
+
+{% if recent_activity %}
+<div class="content">
+  <!-- TODO: not a fan of this info label -->
+<i>{% if account %}Unread {% endif %}Recent Activity:</i>
+  {% for recent_topic in recent_activity %}
+    <a class="forum-dark-link" href="{% url 'topic_posts' recent_topic.board.slug recent_topic.pk %}">
+    {{ recent_topic.subject }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="content">
+  {% for category in categories %}
+    <h3 class="forum-category-title">{{ category.name }}</h3>
+    <div class="forum-category-info">{{ category.description }}</div>
+    <div class="forum-header">
+      <div class="forum-list-info">Boards</div>
+      <div class="forum-list-info landscape-only">Topics</div>
+      <div class="forum-list-info landscape-only">Last Update</div>
+    </div>
+    {% for board in category.get_boards %}
+    <div class="forum-topic">
+      <div class="forum-list-info">
+        <a href="{% url 'board' board.slug %}" class="board-name"> {{ board.name }} </a>
+        <div class="board-info">
+          {{ board.description }}
+        </div>
+      </div>
+      <div class="forum-list-info count topics">{{ board.topics.count }}</div>
+      <div class="forum-list-info">
+      {% with post=board.get_last_post %}
+        {% if post %}
+        <div class="post-preview">
+          "{{ post.truncated_content }}"
+        </div>
+        <small>in <a href="{% url 'topic_posts' board.slug post.topic.pk %}">{{ post.topic.subject }}</a></small>
+        <small>by {{ post.created_by.username }}, {{ post.created_at|naturaltime }}</small>
+        {% endif %}
+      {% endwith %}
+      </div>
+    </div>
+    {% endfor %}
+  {% endfor %}
+  <form action="{% url 'search_results' %}" method="get" class="forum-search">
+    <input name="q" type="text" placeholder="Search...">
+  </form>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block titleblock %}
+{{ view.page_title }}
+{% endblock %}
+
+{% block content %}
+
+{% load addclass %}
+<div class="content">
+	<h1>{{ view.page_title }}</h1>
+	<hr />
+
+	{% for object in object_list %}
+		<div class="character-item">
+			<span class="date">Created on {{ object.db_date_created }}</span>
+			<h4>{{ object }}</h4>
+			{% for piece in object.web_desc %}
+				<p>{{ piece }}</p>
+			{% endfor %}
+			<p><a href="{{ object.web_get_detail_url }}">View Details</a></p>
+		</div>
+		<hr/>
+	{% endfor %}
+	<!-- put this in a block so it only appears if you're below the character limit -->
+	{% if 0 %}
+	<a href="{% url 'character-create' %}">New Character</a></li>
+	{% endif %}
+
+</div>
+{% endblock %}

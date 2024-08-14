@@ -1,0 +1,42 @@
+{% load static sekizai_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <link rel="icon" type="image/x-icon" href="{% static "website/images/logo.png" %}" />
+
+    <!-- Base CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static "website/css/website.css" %}?{{css_version}}">
+    <!-- Font Icon CSS CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static "icons/css/nexus-ui.css" %}">
+    <!-- Forum CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static "css/forum.css" %}?{{css_version}}">
+
+
+    <title>{{game_name}} - {% if flatpage %}{{flatpage.title}}{% else %}{% block titleblock %}{{page_title}}{% endblock %}{% endif %}</title>
+  </head>
+  <body>
+    {% block body %}
+		{% include "website/_header.html" %}
+    {% include "website/_menu.html" %}
+    {% block breadcrumbs %}
+    {% endblock %}
+	<div id="main" role="main">
+      {% include 'website/messages.html' %}
+
+      {% block content %}
+      {% endblock %}
+
+      {% include 'website/pagination.html' %}
+    </div>
+
+    <footer class="footer">
+    {% block footer %}
+       <p>Built using <a href="https://evennia.com">Evennia</a>.</p>
+    {% endblock %}
+    </footer>
+
+    {% endblock %}
+  </body>
+</html>

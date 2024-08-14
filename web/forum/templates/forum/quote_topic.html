@@ -1,0 +1,46 @@
+{% extends "forum_base.html" %}
+{% load static %}
+
+{% block breadcrumbs %}
+<nav class="forum-navigator" aria-label="forum"><a href="{% url 'forum_index' %}" class="forum-light-link">{{ game_name }} Forum</a>
+  > <a href="{% url 'board' topic.board.slug %}" class="forum-light-link">{{ topic.board.name }}</a>
+  > <a href="{% url 'topic_posts' topic.board.slug topic.pk %}" class="forum-light-link">{{ topic.subject }}</a> >> Posting a Reply</nav>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+  <div class="post-content">
+    <span class="post-date">{{ quoted.created_at }}</span>
+    <span class="post-header">
+    <!-- TODO: make this a link to the post, not just topic -->
+    {% if quoted.subject %}
+      {{ quoted.subject }}
+    {% else %}
+      Re: {{ quoted.topic.subject }}
+    {% endif %}
+    </span>
+    {% if user == quoted.created_by %}
+      <div class="you">
+    {% else %}
+      <div class="username">
+    {% endif %}
+    by {{ quoted.created_by.username }}</div>
+    {{ quoted.content | safe }}
+  </div>
+</div>
+
+<div class="content">
+  <form method="post" novalidate class="forum-post-form">
+
+    {% csrf_token %}
+    {% include 'includes/forum_form.html' %}
+
+    <div class="submit">
+      <button type="submit" class="submit">Post</button>
+    </div>
+  </form>
+</div>
+
+{% include 'includes/last_posts.html' %}
+
+{% endblock %}

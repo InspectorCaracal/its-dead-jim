@@ -1,0 +1,48 @@
+{% extends "forum_base.html" %}
+{% load static %}
+
+{% block breadcrumbs %}
+<nav class="forum-navigator" aria-label="forum"><a href="{% url 'forum_index' %}" class="forum-light-link">{{ game_name }} Forum</a> >> Search Results</nav>
+{% endblock %}
+
+{% block content %}
+<div class="content">
+  {% if object_list %}
+  <p>Results for: <strong>{{ search_string }}</strong></p>
+  {% else %}
+  <p>No results found for: <strong>{{ search_string }}</strong></p>
+  {% endif %}
+</div>
+{% for post in object_list %}
+<div id="{{ post.pk }}" class="content">
+  <div class="post-content">
+    <span class="post-date">{{ post.created_at }}</span>
+    <span class="post-header">
+    <a href="{% url 'topic_posts' post.topic.board.slug post.topic.pk  %}?page={{post.get_page_num}}#{{post.pk}}">
+    {% if post.subject %}
+      {{ post.subject }}
+    {% else %}
+      Re: {{ post.topic.subject }}
+    {% endif %}
+    </a></span>
+    {% if user == post.created_by %}
+     <div class="you">
+    {% else %}
+      <div class="username">
+    {% endif %}
+      by {{ post.created_by.username }}
+    </div>
+    {% if post.created_by == user %}
+      <div class="post-mine" >
+    {% else %}
+      <div class="post-yours">
+    {% endif %}
+    {{ post.content | safe }}
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+{% endblock %}
+

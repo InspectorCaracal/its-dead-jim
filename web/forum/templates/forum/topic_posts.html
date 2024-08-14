@@ -1,0 +1,95 @@
+{% extends "forum_base.html" %}
+{% load static gravatar %}
+
+{% block breadcrumbs %}
+<nav class="forum-navigator" aria-label="forum">
+  <a href="{% url 'forum_index' %}" class="forum-light-link">{{ game_name }} Forum</a>
+  > <a href="{% url 'board' topic.board.slug %}" class="forum-light-link">{{ topic.board.name }}</a>
+  > {{ topic.subject }}
+</nav>
+{% endblock %}
+
+{% block content %}
+  <h1 class="small-forum-header">{{ topic.subject}}
+  {% if user.is_staff %}
+  <a href="{% url 'lock_topic' topic.board.slug topic.pk %}"
+    class="forum-button-link" role="button">{% if topic.locked %}Unlock{% else %}Lock{% endif %}</a>
+  <a href="{% url 'pin_topic' topic.board.slug topic.pk %}"
+    class="forum-button-link" role="button">{% if topic.pinned %}Unpin{% else %}Pin{% endif %}</a>
+  {% endif %}
+</h1>
+    {% for post in posts %}
+    <div id="{{ post.pk }}" class="forum-post content">
+      <div class="forum-poster">
+        {% gravatar post.created_by.email 150 post.created_by.username %}
+        {% if user == post.created_by %}
+        <div class="you">
+        {% else %}
+        <div class="username">
+        {% endif %}
+        {{ post.created_by.username }}</div>
+        <small>Posts: {{ post.created_by.posts.count }}</small>
+      </div>
+      <div class="post-content">
+        <span class="post-date">{{ post.created_at }}</span>
+<!--  <span style="float:right;"> {{ post.post_number }} of {{ topic.posts.count }} </span> -->
+        {% if forloop.first %}
+        <!-- First post won't be quoting anything but might have a poll -->
+          {% include 'includes/poll_view.html' %}
+        {% else %}
+        <span class="post-header">
+          {% if post.subject %}
+            {{ post.subject }}
+          {% else %}
+            Re: {{ topic.subject }}
+          {% endif %}
+         </span>
+        {% endif %}
+        {% if post.quoted_text %}
+          <div class="quoting">
+            {{post.quoted_text | safe }}
+            {% if post.quoted %}
+            <small>originally posted by {{ post.quoted.created_by.username}} at {{post.quoted.created_at}}</small>
+            {% else %}
+            <small>original post was deleted</small>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if post.created_by == user %}
+          <div class="post-mine" >
+        {% else %}
+          <div class="post-yours">
+        {% endif %}
+          {{ post.content | safe }}
+        </div>
+    <!-- TODO: do I want to add forum signatures for account profiles? -->
+                                  <!--
+                                  {% if post.posting_character %}
+                                  {% if post.posting_character.db.signature %}
+                                  <div class="forum-navigator" style="margin-left:10%">
+                                      <small><i> {{ post.posting_character.db.signature }}  </i></small>
+                                  </div>
+                                  {% endif %}
+                                  {% endif %}
+                                  -->
+            <span class="post-buttons">
+              {% if post.created_by == user or user.is_staff %}
+              <a href="{% url 'edit_post' post.topic.board.slug post.topic.pk post.pk %}"
+                class="forum-button-link" role="button">Edit</a>
+                <a href="{% url 'delete_post' post.topic.board.slug post.topic.pk post.pk  %}"
+                class="forum-button-link" role="button" style="color:var(--error-color) !important">Delete</a>
+            {% endif %}
+            {% if topic.locked %}
+              <div class="only-desktop">This topic is locked.</div>
+            {% else %}
+            <a href="{% url 'quote_post' post.topic.board.slug post.topic.pk post.pk %}"
+            class="forum-button-link" role="button">Quote</a>
+          <a href="{% url 'reply_post' post.topic.board.slug post.topic.pk post.pk %}"
+    class="forum-button-link" role="button">Reply</a>
+            {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+
+{% endblock %}
+

@@ -1,0 +1,67 @@
+{% extends 'forum_base.html' %}
+{% load static humanize %}
+
+{% block breadcrumbs %}
+<nav class="forum-navigator" aria-label="forum"><a href="{% url 'forum_index' %}" class="forum-light-link"> {{ game_name }} Forum</a> > {{ board.name }}</nav>
+{% endblock %}
+
+{% block content %}
+  <h1>{{ board.name }}</h1>
+  <h3>{{ board.description }}</h3>
+  <div class="content topic-list">
+    <div class="forum-button-right"><a href="{% url 'new_topic' board.slug %}" class="forum-button-link">New Topic</a></div>
+    <div class="forum-header">
+      <div class="forum-list-info">Topics</div>
+      <div class="forum-list-info landscape-only">Replies</div>
+      <div class="forum-list-info landscape-only">Last Update</div>
+    </div>
+    {% for topic in topics %}
+    {% url 'topic_posts' board.slug topic.pk as topic_url %}
+    <div class="forum-topic">
+      <div class="forum-list-info">
+        <span class="topic-status-icon">
+{% if topic.pinned %}<i class="icon-pin" role="img" aria-label="pin icon"></i>{% else %}<img src="{% static 'website/forum/forum_icons/blank_icon.png' %}" alt="">{% endif %}{% if topic.locked %}<i class="icon-lock" role="img" aria-label="locked icon"></i>{% elif topic.poll %}<i class="icon-check" role="img" aria-label="poll icon"></i>{% endif %}
+        </span>
+        <a href="{% url 'topic_posts' board.slug topic.pk %}" class="topic-subject">
+          {{ topic.subject }}
+        </a>
+        <div class="topic-author landscape-only">
+          by {{ topic.starter.username }} at {{ topic.get_first_post.created_at }}
+        </div>
+        {% if topic.get_page_count > 1 %}
+        <span class="topic-pages">
+          Pages:
+          {% for i in topic.get_page_range %}
+            <a href="{{ topic_url }}?page={{ i }}" class="forum-link">{{ i }}</a>
+          {% endfor %}
+          {% if topic.has_many_pages %}
+            ... <a href="{{ topic_url }}?page={{ topic.get_page_count }}" class="forum-link">Last Page</a>
+          {% endif %}
+        </span>
+        {% endif %}
+      </div>
+      <div class="forum-list-info count replies">
+        {{ topic.replies }}
+      </div>
+      <div class="forum-list-info">
+      {% with post=topic.get_last_post %}
+        {% if post %}
+        <div class="post-preview">"{{ post.truncated_content }}"</div>
+        <small>by {{ post.created_by.username }}, {{ post.created_at|naturaltime }}</small>
+        {% endif %}
+      {% endwith %}
+      </div>
+    </div>
+    {% endfor %}
+<div class="forum-button-right">
+  <a href="{% url 'new_topic' board.slug %}" class="forum-button-link">New Topic</a>
+</div>
+<form action="{% url 'search_results' %}" method="get" class="forum-search">
+  <input name="q" type="text" placeholder="Search...">
+  <input name="b" type="hidden" value="{{ board.slug }}">
+</form>
+
+</div>
+
+
+{% endblock %}

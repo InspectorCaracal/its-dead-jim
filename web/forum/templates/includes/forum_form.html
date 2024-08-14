@@ -1,0 +1,29 @@
+<!-- TODO: we should have a base post-form page
+  and then extend it in the templates, not this way -->
+{{ form.media }}
+{% load widget_tweaks %}
+{% for field in form %}
+
+  <div class="form-group" style="width:100%">
+    {% if form.is_bound %}
+      {% if field.errors %}
+        {% render_field field class="form-control is-invalid" %}
+        {% for error in field.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+        {% endfor %}
+      {% else %}
+        {% render_field field class="form-control is-valid" %}
+      {% endif %}
+    {% else %}
+      {% render_field field class="form-control" %}
+    {% endif %}
+
+    {% if field.help_text %}
+      <small class="form-text text-muted">
+        {{ field.help_text }}
+      </small>
+    {% endif %}
+  </div>
+{% endfor %}

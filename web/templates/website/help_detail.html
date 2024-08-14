@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block titleblock %}
+Help for {{ object }}
+{% endblock %}
+
+{% block content %}
+
+{% load addclass %}
+<div class="content">
+<a href="{% url 'help' %}">Help Index</a> - <a href="{% url 'help' %}#{{ object.web_help_category }}">{{ object.help_category|title }}</a> - <span aria-current="page">{{ object.web_help_key|title }}</span>
+	<h1 class="card-title">{{ object }}</h1>
+	<hr />
+
+	<div class="help-text">{{ entry_text }}</div>
+</div>
+{% endblock %}
